@@ -222,3 +222,43 @@ pub fn select_(input: TokenStream) -> TokenStream {
     )
     .into()
 }
+
+struct NavigateArgs {
+    router: Expr,
+    route: Expr,
+    param: Expr,
+}
+
+impl Parse for NavigateArgs {
+    fn parse(input: ParseStream) -> Result<Self> {
+        let router: Expr = input.parse()?;
+        input.parse::<Token![,]>()?; // Expect a comma
+
+        let route: Expr = input.parse()?;
+        input.parse::<Token![,]>()?; // Expect a comma
+
+        let param: Expr = input.parse()?;
+
+        if input.peek(Token![,]) {
+            let _ = input.parse::<TokenTree>();
+        }
+
+        Ok(NavigateArgs { router, route, param })
+    }
+}
+
+#[proc_macro]
+pub fn navigate(input: TokenStream) -> TokenStream {
+    let args = parse_macro_input!(input as NavigateArgs);
+    let router = args.router;
+    let route = args.route;
+    let param = args.param;
+
+    let expanded = quote! {
+        {
+            #router.navigate(#route, #param);
+        }
+    };
+
+    TokenStream::from(expanded)
+}
