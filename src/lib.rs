@@ -248,7 +248,7 @@ impl Parse for NavigateArgs {
 }
 
 #[proc_macro]
-pub fn navigate(input: TokenStream) -> TokenStream {
+pub fn navigate_(input: TokenStream) -> TokenStream {
     let args = parse_macro_input!(input as NavigateArgs);
     let router = args.router;
     let route = args.route;
