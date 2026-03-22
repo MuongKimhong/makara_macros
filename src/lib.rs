@@ -121,6 +121,7 @@ no_argument_widget!(modal_, "makara::widgets::modal::modal");
 no_argument_widget!(radio_group_, "makara::widgets::radio::radio_group");
 no_argument_widget!(progress_bar_, "makara::widgets::progress_bar::progress_bar");
 no_argument_widget!(circular_, "makara::widgets::circular::circular");
+no_argument_widget!(file_picker_, "makara::widgets::file_picker::file_picker");
 
 struct WidgetWithText { text: Expr, tail: WidgetTail }
 impl Parse for WidgetWithText {
