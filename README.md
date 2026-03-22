@@ -1,8 +1,11 @@
 ### Macros for Makara
 
 ### Installation
-In Cargo.toml
 ```md
 [dependencies]
-makara_macros = { git = "https://github.com/MuongKimhong/makara_macros", branch = "master" }
+makara_macros = "0.1.1"
+```
+or
+```
+cargo add makara_macros
 ```
