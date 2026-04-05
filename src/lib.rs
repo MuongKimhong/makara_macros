@@ -1,6 +1,7 @@
 use proc_macro::TokenStream;
 use proc_macro2::TokenTree;
 use quote::quote;
+use syn::{Data, Fields, DeriveInput};
 use syn::parse::{Parse, ParseStream, Result};
 use syn::{bracketed, parse_macro_input, Expr, Ident, Token};
 
@@ -262,4 +263,44 @@ pub fn navigate_(input: TokenStream) -> TokenStream {
     };
 
     TokenStream::from(expanded)
+}
+
+/// A trait that provides `get()` and `get_nut()` methods for a struct with tuple field.
+///
+/// Example:
+/// ```
+/// #[derive(Getter)]
+/// pub struct MyType(pub i32);
+///
+/// // instead of `my_type.0`, it will be `my_type.get()`.
+/// ```
+#[proc_macro_derive(Getter)]
+pub fn getter_derive(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = input.ident;
+
+    // Check if it's a tuple struct with at least one field
+    let implementation = if let Data::Struct(data) = input.data {
+        if let Fields::Unnamed(fields) = data.fields {
+            let first_field = &fields.unnamed[0];
+            let ty = &first_field.ty;
+
+            quote! {
+                impl #name {
+                    pub fn get(&self) -> &#ty {
+                        &self.0
+                    }
+                    pub fn get_mut(&mut self) -> &mut #ty {
+                        &mut self.0
+                    }
+                }
+            }
+        } else {
+            panic!("Getter derive only works on tuple structs (e.g., Struct(T))");
+        }
+    } else {
+        panic!("Getter derive only works on structs");
+    };
+
+    TokenStream::from(implementation)
 }

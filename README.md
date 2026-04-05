@@ -3,7 +3,7 @@
 ### Installation
 ```md
 [dependencies]
-makara_macros = "0.1.1"
+makara_macros = "0.1.2"
 ```
 or
 ```
